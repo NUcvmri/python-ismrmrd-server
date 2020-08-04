@@ -76,16 +76,18 @@ def eddy(mag, flow):
 	config = tf.ConfigProto()
 	config.gpu_options.allow_growth = True
 	#config.gpu_options.per_process_gpu_memory_fraction = 0.4
-	with tf.Session(config=config) as sess:
-		sess.run(tf.global_variables_initializer())
-		sess.run(tf.local_variables_initializer())
-		image = sess.run([input_])
-		saver1.restore(sess, checkpoint1.model_checkpoint_path)
-		h , seg1 = sess.run([logits_1, llogits_1], feed_dict={input_p: image[0], flag: True})
-		#h , seg2 = sess.run([logits_1, llogits_1], feed_dict={input_1p: image[1], flag: True})
-		#h , seg3 = sess.run([logits_1, llogits_1], feed_dict={input_1p: image[2], flag: True})
+	with tf.Graph().as_default():
+		with tf.Session(config=config) as sess:
+			sess.run(tf.global_variables_initializer())
+			sess.run(tf.local_variables_initializer())
+			image = sess.run([input_])
+			saver1.restore(sess, checkpoint1.model_checkpoint_path)
+			h , seg1 = sess.run([logits_1, llogits_1], feed_dict={input_p: image[0], flag: True})
+			#h , seg2 = sess.run([logits_1, llogits_1], feed_dict={input_1p: image[1], flag: True})
+			#h , seg3 = sess.run([logits_1, llogits_1], feed_dict={input_1p: image[2], flag: True})
 
 	sess.close()
+	tf.reset_default_graph()
 	tf.keras.backend.clear_session()
 
 	mask1 = seg1[...,1]
