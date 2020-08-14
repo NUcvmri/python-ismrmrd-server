@@ -163,7 +163,7 @@ def eddy(mag, flow):
 		
 			
 
-	io.savemat('new_vel.mat',{'data':flow})
-	io.savemat('eddy_mask.mat',{'data':mask1})
+	#io.savemat('new_vel.mat',{'data':flow})
+	#io.savemat('eddy_mask.mat',{'data':mask1})
 	return image, flow
 	
