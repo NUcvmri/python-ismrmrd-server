@@ -56,7 +56,7 @@ def mipTesting(mask,flow,mag):
 
 
     mipimage = mipimage.astype(np.int16)
-    io.savemat('thing.mat',{'thing':mipimage})
+    #io.savemat('thing.mat',{'thing':mipimage})
     return mipimage
 """
 #Uncomment to display
