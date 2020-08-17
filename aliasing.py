@@ -3,7 +3,6 @@ import tensorflow as tf
 
 import numpy as np
 import os
-from matplotlib import pyplot as plt
 import scipy.io as io
 import argparse
 #from keras import backend as K
