@@ -193,12 +193,12 @@ def aliasing(path1,path2, venc):
 					for y in range(alias.shape[1]):
 						if h[x,y,i] == 1:
 							value = alias[x,y,i]
-							if np.abs(value) < venc/100:
+							if np.abs(value) < venc*1.1/100:
 								new = value - (np.sign(value) * venc*2/100)
 								new_alis[x,y,i] = new
 							else:
 								new = value - (np.sign(value) * venc*2/100)
-								new = new - (np.sign(value) * venc*3/100)
+								new = new - (np.sign(new) * venc*3/100)
 								new_alis[x,y,i] = new
 						else:
 							continue
