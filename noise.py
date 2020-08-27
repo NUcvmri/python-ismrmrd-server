@@ -24,24 +24,32 @@ def noise(image, new_flow):
 	config = tf.ConfigProto()
 	config.gpu_options.allow_growth = True
 	#config.gpu_options.per_process_gpu_memory_fraction = 0.4
-	with tf.Session(config=config) as sesss:
-		sesss.run(tf.global_variables_initializer())
+	with tf.Session(config=config) as sess:
+		sess.run(tf.global_variables_initializer())
 		saver = tf.train.Saver(tf.global_variables())
 		#checkpoint1 = tf.train.get_checkpoint_state("E:/HB/scripts_and_stuff/aliasing/new_noise")
 		#sesss.run(tf.local_variables_initializer())
-		s = sesss.run([input_4])
+		s = sess.run([input_4])
 		print(s[0].shape)
-		saver.restore(sesss, tf.train.get_checkpoint_state("/opt/codes/python-ismrmrd-server/new_noise").model_checkpoint_path)
-		h , seg3 = sesss.run([logits_2, llogits_2], feed_dict={input_2p:s[0], flag: True})
-	sesss.close()
+		saver.restore(sess, tf.train.get_checkpoint_state("/opt/codes/python-ismrmrd-server/new_noise").model_checkpoint_path)
+		h , seg3 = sess.run([logits_2, llogits_2], feed_dict={input_2p:s[0], flag: True})
+	sess.close()
 	tf.keras.backend.clear_session()
 
 	mask2 = np.squeeze(seg3[...,1])
 	mask2 = mask2>0.5
 	#mask2 = np.logical_not(mask2)
 	mask2 = mask2.astype(np.float32)
+	if new_flow.shape[1] < 96:
+		W = new_flow.shape[1]
+		#h1 = np.abs((HH - 160))/2
+		w1 = np.abs((W - 96))/2
+		w1 = w1.astype(np.int16)
+		mask2 = mask2[:, w1:96-w1, :]
 	mask2 = np.expand_dims(mask2,axis=3)
 	mask2 = np.expand_dims(mask2,axis=4)
+	
+
 
 	final_flow = np.multiply(new_flow, mask2)
 	

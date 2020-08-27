@@ -99,6 +99,24 @@ def eddy(mag, flow):
 	#plt.show()
 	mask1 = np.squeeze(mask1)
 	print(mask1.shape)
+	HH = flow.shape[0]
+	WW = flow.shape[1]
+	h1 = np.abs((HH - 160))/2
+	w1 = np.abs((WW - 96))/2
+	print(h1)
+	print(w1)
+	h1 = np.int(h1)
+	w1 = np.int(w1)
+	if flow.shape[1] >= 96:
+		flow = flow[h1:HH-h1, w1:WW-w1, ...]
+	elif flow.shape[1] < 96:
+		#flows = np.zeros([flow[0].shape, 96, flow])
+		flow = flow[h1:HH-h1, ...]
+		mask1 = mask1[:, w1:96-w1, :]
+		print(mask1.shape)
+		#print(w1)
+		#print(WW)
+
 	[H, W, D] = mask1.shape
 	xx = np.arange(W)
 
@@ -110,15 +128,7 @@ def eddy(mag, flow):
 	#yy = np.fliplr([yy])[0]
 	#print(yy)
 	yyy = np.tile(yy,(1,W))
-	HH = flow.shape[0]
-	WW = flow.shape[1]
-	h1 = (HH - 160)/2
-	w1 = (WW - 96)/2
-	print(h1)
-	print(w1)
-	h1 = np.int(h1)
-	w1 = np.int(w1)
-	flow = flow[h1:HH-h1,w1:WW-w1,...]
+	
 	
 
 	print(np.amin(flow))
@@ -134,7 +144,7 @@ def eddy(mag, flow):
 		imaFlow = np.squeeze(flow[...,i,:,:])
 		#print(imaFlow.shape)
 		statMask = mask1[...,i]
-		statMask = statMask.astype(int)
+		statMask = statMask.astype(np.int16)
 		imaFlow1 = np.zeros(imaFlow.shape)
 		#statMask = statMask.astype(np.float32)
 		for k in range(imaFlow.shape[2]):

@@ -198,36 +198,46 @@ def process_image(images, mag, config, metadata):
             flows = flows - tmpMask2
 
             #TRANSPOSING
-            flows = np.transpose(flows, (1,0,2,3,4))
-            flows = np.flipud(flows)
-            datamag = np.transpose(datamag, (1, 0, 2, 3))
-            datamag = np.flipud(datamag)
+            if flows.shape[0] < flows.shape[1]:
+                flows = np.transpose(flows, (1,0,2,3,4))
+                flows = np.flipud(flows)
+                datamag = np.transpose(datamag, (1, 0, 2, 3))
+                datamag = np.flipud(datamag)
+
             print("saving")
+            #datamag = datamag[:,17:111,...]
+            #flows = flows[:, 17:111, ...]
             #io.savemat('mag.mat', {'mag': datamag})
             #io.savemat('flow.mat', {'flow': flows})
-            k,kk = eddy(datamag,flows)
+            k, kk = eddy(datamag, flows)
             l, new_flow = noise(k,kk)
             #new_flow = alias(new_flow, venc)
             mm = segment(l)
 
             #UNTRANSPOSE
-            flows = np.flipud(flows)
-            flows = np.transpose(flows, (1,0,2,3,4))
-            datamag = np.flipud(datamag)
-            datamag = np.transpose(datamag, (1, 0, 2, 3))
-            mm = np.flipud(mm)
-            mm = np.transpose(mm, (1,0,2))
-            new_flow = np.flipud(new_flow)
-            new_flow = np.transpose(new_flow, (1,0,2,3,4))
+            if flows.shape[0] < flows.shape[1]:
+                flows = np.flipud(flows)
+                flows = np.transpose(flows, (1,0,2,3,4))
+                datamag = np.flipud(datamag)
+                datamag = np.transpose(datamag, (1, 0, 2, 3))
+                mm = np.flipud(mm)
+                mm = np.transpose(mm, (1,0,2))
+                new_flow = np.flipud(new_flow)
+                new_flow = np.transpose(new_flow, (1,0,2,3,4))
             
-            hh = (flows.shape[0] - new_flow.shape[0])//2
+            hh = np.abs((flows.shape[0] - mm.shape[0]))//2
             h = flows.shape[0]
-            ww = (flows.shape[1] - new_flow.shape[1])//2
+            ww = np.abs((flows.shape[1] - mm.shape[1]))//2
             w = flows.shape[1]
-            flows[hh:h-hh,ww:w-ww,...] = new_flow
+            #flows[hh:h-hh,ww:w-ww,...] = new_flow
 
             m = np.zeros([flows.shape[0], flows.shape[1], flows.shape[2]])
-            m[hh:h-hh,ww:w-ww,...] = mm
+            if flows.shape[1] >= 96:
+                flows[hh:h-hh, ww:w-ww, ...] = new_flow
+                m[hh:h-hh, ww:w-ww, ...] = mm
+            elif flows.shape[1] < 96:
+                flows[hh:h-hh, :, ...] = new_flow
+                m[hh:h-hh, :, ...] = mm[:, ww:96-ww,:]
             #io.savemat('aorta_mask_struct.mat',{'seg':m})
             #io.savemat('new_flow.mat', {'new_flow': flows})
             m = np.expand_dims(m,axis=3)

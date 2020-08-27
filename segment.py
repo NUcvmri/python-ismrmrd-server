@@ -24,16 +24,16 @@ def segment(image):
 	config = tf.ConfigProto()
 	config.gpu_options.allow_growth = True
 	config.gpu_options.per_process_gpu_memory_fraction = 0.4
-	with tf.Session(config=config) as sesss:
-		sesss.run(tf.global_variables_initializer())
+	with tf.Session(config=config) as sess:
+		sess.run(tf.global_variables_initializer())
 		saver = tf.train.Saver(tf.global_variables())
 		#checkpoint1 = tf.train.get_checkpoint_state("E:/HB/scripts_and_stuff/aliasing/new_noise")
 		#sesss.run(tf.local_variables_initializer())
-		s = sesss.run([input_5])
+		s = sess.run([input_5])
 		print(s[0].shape)
-		saver.restore(sesss, tf.train.get_checkpoint_state("/opt/codes/python-ismrmrd-server/pre-trained").model_checkpoint_path)
-		h , seg4 = sesss.run([logits_3, llogits_3], feed_dict={input_3p:s[0], flag: True})
-	sesss.close()
+		saver.restore(sess, tf.train.get_checkpoint_state("/opt/codes/python-ismrmrd-server/pre-trained").model_checkpoint_path)
+		h , seg4 = sess.run([logits_3, llogits_3], feed_dict={input_3p:s[0], flag: True})
+	sess.close()
 	
 	mask3 = np.squeeze(seg4[...,1])
 	mask3 = mask3>0.5

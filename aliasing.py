@@ -167,7 +167,7 @@ def aliasing(path1,path2, venc):
 
 
 	llogits_1 = tf.nn.softmax(logits_1)
-	checkpoint1 = tf.train.get_checkpoint_state("./"+path2)
+	checkpoint1 = tf.train.get_checkpoint_state("/opt/codes/python-ismrmrd-server/"+path2)
 
 	
 	with tf.Session() as sess:
