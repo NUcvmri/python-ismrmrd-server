@@ -304,6 +304,7 @@ def process_image(images, mag, config, metadata):
         tmpMeta['ImageProcessingHistory'] = ['FIRE', 'PYTHON']
         tmpMeta['WindowCenter']           = '16384'
         tmpMeta['WindowWidth']            = '32768'
+        tmpMeta['LUTFileName']            = 'TestLutFile.pal'
 
         xml = tmpMeta.serialize()
         logging.debug("Image MetaAttributes: %s", xml)
