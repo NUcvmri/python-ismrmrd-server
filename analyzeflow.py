@@ -247,7 +247,7 @@ def process_image(images, mag, config, metadata):
             mip = mipTesting(m,flows,datamag)
             #io.savemat('mip2.mat',{'mip':mip})
             sli = 0
-            mip = flipud(mip)
+            mip = np.flipud(mip)
             mip = np.fliplr(mip)
             
             for phs in range(mip.shape[2]):
