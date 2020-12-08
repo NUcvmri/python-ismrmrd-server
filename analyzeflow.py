@@ -246,11 +246,40 @@ def process_image(images, mag, config, metadata):
 
             mip = mipTesting(m,flows,datamag)
             #io.savemat('mip2.mat',{'mip':mip})
+            sli = 0
+            mip = flipud(mip)
+            mip = np.fliplr(mip)
+            
+            for phs in range(mip.shape[2]):
+                # Create new MRD instance for the processed image
+                tmpImg = ismrmrd.Image.from_array(mip[...,phs].transpose())
+
+                # Set the header information
+                tmpHead = head[sli][phs]
+                tmpHead.data_type          = tmpImg.getHead().data_type
+                tmpHead.image_index        = phs 
+                tmpHead.image_series_index = last_series
+                tmpImg.setHead(tmpHead)
+
+                # Set ISMRMRD Meta Attributes
+                tmpMeta = meta2[sli][phs]
+                tmpMeta['DataRole']               = 'Image'
+                tmpMeta['ImageProcessingHistory'] = ['FIRE', 'PYTHON']
+                tmpMeta['WindowCenter']           = '16384'
+                tmpMeta['WindowWidth']            = '32768'
+                tmpMeta['LUTFileName']            = 'TestLutFile.pal'
+
+                xml = tmpMeta.serialize()
+                logging.debug("Image MetaAttributes: %s", xml)
+                tmpImg.attribute_string = xml
+                imagesOut.append(tmpImg)
+                last_series += 1
+
                         
             
 
         # Re-slice back into 2D images and let's also slice the MIP images
-        
+        """
         for sli in range(data_masked.shape[2]):
             for phs in range(data_masked.shape[3]):
                 # Create new MRD instance for the processed image
@@ -274,42 +303,18 @@ def process_image(images, mag, config, metadata):
                 logging.debug("Image MetaAttributes: %s", xml)
                 tmpImg.attribute_string = xml
                 imagesOut.append(tmpImg)
+        """
 
         
 
 
 
-        last_series += 1
         
         
 
 
     #export the MIP
-    sli = 0
     
-    for phs in range(mip.shape[2]):
-        # Create new MRD instance for the processed image
-        tmpImg = ismrmrd.Image.from_array(mip[...,phs].transpose())
-
-        # Set the header information
-        tmpHead = head[sli][phs]
-        tmpHead.data_type          = tmpImg.getHead().data_type
-        tmpHead.image_index        = phs 
-        tmpHead.image_series_index = last_series
-        tmpImg.setHead(tmpHead)
-
-        # Set ISMRMRD Meta Attributes
-        tmpMeta = meta2[sli][phs]
-        tmpMeta['DataRole']               = 'Image'
-        tmpMeta['ImageProcessingHistory'] = ['FIRE', 'PYTHON']
-        tmpMeta['WindowCenter']           = '16384'
-        tmpMeta['WindowWidth']            = '32768'
-        tmpMeta['LUTFileName']            = 'TestLutFile.pal'
-
-        xml = tmpMeta.serialize()
-        logging.debug("Image MetaAttributes: %s", xml)
-        tmpImg.attribute_string = xml
-        imagesOut.append(tmpImg)
     
     #last_series += 1
 
