@@ -43,14 +43,14 @@ def mipTesting(mask,flow,mag):
     # Scale the images
     mip[(mip > 1.5)] = 1.5
     mip[(mip < 0)] = 0
-    mip = 2048 + (mip / 1.5)*2047 
+    mip = 32768 + (mip / 1.5)*32767
     mipmag = (mipmag - np.amin(mipmag))
     mipmag = mipmag / np.amax(mipmag)
-    mipmag = 2047 * mipmag
+    mipmag = 32768 * mipmag
 
     # Superimpose the images
     mipimage = mipmag
-    mipimage[(mip > 2048)] = mip[(mip > 2048)]
+    mipimage[(mip > 32768)] = mip[(mip > 32768)]
 
 
 

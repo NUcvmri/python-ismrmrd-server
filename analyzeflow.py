@@ -265,9 +265,9 @@ def process_image(images, mag, config, metadata):
                 tmpMeta = meta2[sli][phs]
                 tmpMeta['DataRole']               = 'Image'
                 tmpMeta['ImageProcessingHistory'] = ['FIRE', 'PYTHON']
-                tmpMeta['WindowCenter']           = '16384'
-                tmpMeta['WindowWidth']            = '32768'
-                tmpMeta['LUTFileName']            = 'TestLutFile.pal'
+                tmpMeta['WindowCenter']           = '32768'
+                tmpMeta['WindowWidth']            = '65535'
+                tmpMeta['LUTFileName']            = 'GrayAndJet16.pal'
 
                 xml = tmpMeta.serialize()
                 logging.debug("Image MetaAttributes: %s", xml)
