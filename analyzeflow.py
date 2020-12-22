@@ -143,12 +143,14 @@ def process_image(images, mag, config, metadata):
     #if item.image_type is ismrmrd.IMTYPE_PHASE:
     datamag = np.zeros((mag[0].data.shape[2], mag[0].data.shape[3], max(
         slices)+1, max(phases)+1), mag[0].data.dtype)
-    head = [[None]*(max(phases)+1) for _ in range(max(slices)+1)]
-    meta2 = [[None]*(max(phases)+1) for _ in range(max(slices)+1)]
+    headmag = [[None]*(max(phases)+1) for _ in range(max(slices)+1)]
+    metamag = [[None]*(max(phases)+1) for _ in range(max(slices)+1)]
 
     for imgm, sli, phs in zip(mag, slices, phases):
         #if ismrmrd.Meta.deserialize(img.attribute_string)['FlowDirDisplay'] == venc_dir:
         datamag[:, :, sli, phs] = imgm.data
+        headmag[sli][phs] = imgm.getHead()
+        metamag[sli][phs] = ismrmrd.Meta.deserialize(imgm.attribute_string)
 
     for venc_dir in unique_venc_dir:
         # data array has dimensions [x y sli phs]
@@ -255,14 +257,14 @@ def process_image(images, mag, config, metadata):
                 tmpImg = ismrmrd.Image.from_array(mip[...,phs].transpose())
 
                 # Set the header information
-                tmpHead = head[sli][phs]
+                tmpHead = headmag[sli][phs]
                 tmpHead.data_type          = tmpImg.getHead().data_type
                 tmpHead.image_index        = phs 
                 tmpHead.image_series_index = last_series
                 tmpImg.setHead(tmpHead)
 
                 # Set ISMRMRD Meta Attributes
-                tmpMeta = meta2[sli][phs]
+                tmpMeta = metamag[sli][phs]
                 tmpMeta['DataRole']               = 'Image'
                 tmpMeta['ImageProcessingHistory'] = ['FIRE', 'PYTHON']
                 tmpMeta['WindowCenter']           = '32768'
