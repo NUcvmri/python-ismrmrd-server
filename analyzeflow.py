@@ -275,7 +275,7 @@ def process_image(images, mag, config, metadata):
                 logging.debug("Image MetaAttributes: %s", xml)
                 tmpImg.attribute_string = xml
                 imagesOut.append(tmpImg)
-                last_series += 1
+                #last_series += 1
 
                         
             
@@ -318,7 +318,7 @@ def process_image(images, mag, config, metadata):
     #export the MIP
     
     
-    #last_series += 1
+    last_series += 1
 
 
     return imagesOut
