@@ -213,7 +213,7 @@ def process_image(images, mag, config, metadata):
             #io.savemat('flow.mat', {'flow': flows})
             k, kk = eddy(datamag, flows)
             l, new_flow = noise(k,kk)
-            #new_flow = alias(new_flow, venc)
+            new_flow = alias(new_flow, venc)
             mm = segment(l)
 
             #UNTRANSPOSE
@@ -275,10 +275,8 @@ def process_image(images, mag, config, metadata):
                 logging.debug("Image MetaAttributes: %s", xml)
                 tmpImg.attribute_string = xml
                 imagesOut.append(tmpImg)
-        last_series += 1
-
-                        
-            
+            last_series += 1
+       
 
         # Re-slice back into 2D images and let's also slice the MIP images
         """
