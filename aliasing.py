@@ -181,7 +181,7 @@ def aliasing(path1,path2, venc):
 		phases = sess.run(phase)
 		#print(phases)
 		for i in range(int(phases)):
-			print(i)
+			#print(i)
 			image,alias = sess.run([image_batch,images])#, input_2, input_3])
 			_ , h = sess.run([logits_1, llogits_1], feed_dict={input_1p: image, flag: True})
 			h = np.squeeze(h)
