@@ -33,7 +33,7 @@ def alias(flow, venc):
   s = list(range(len(f)))
   #print(s)
   #random.shuffle(s)
-  test_filename = 'f.tfrecords'
+  test_filename = '/opt/codes/python-ismrmrd-server/f.tfrecords'
   writer = tf.python_io.TFRecordWriter(test_filename)
 
   for i in s:
@@ -57,7 +57,7 @@ def alias(flow, venc):
   s = list(range(len(fv)))
   #print(s)
   #random.shuffle(s)
-  test_filename = 'fv.tfrecords'
+  test_filename = '/opt/codes/python-ismrmrd-server/fv.tfrecords'
   writer = tf.python_io.TFRecordWriter(test_filename)
 
   for i in s:
